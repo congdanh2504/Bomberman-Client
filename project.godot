@@ -17,6 +17,7 @@ config/icon="res://icon.png"
 [autoload]
 
 Global="*res://scripts/Global.gd"
+Networking="*res://scripts/Networking.gd"
 
 [display]
 

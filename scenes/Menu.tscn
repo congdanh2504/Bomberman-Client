@@ -6,7 +6,7 @@
 [ext_resource path="res://assets/fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://scripts/Menu.gd" type="Script" id=5]
 
-[sub_resource type="DynamicFont" id=1]
+[sub_resource type="DynamicFont" id=5]
 outline_color = Color( 0.0823529, 0.337255, 0.929412, 1 )
 font_data = ExtResource( 4 )
 
@@ -55,7 +55,7 @@ margin_bottom = 232.0
 [node name="Label" type="Label" parent="VBoxContainer"]
 margin_right = 322.0
 margin_bottom = 20.0
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 5 )
 text = "Bomber game"
 align = 1
 
@@ -63,7 +63,7 @@ align = 1
 margin_top = 24.0
 margin_right = 322.0
 margin_bottom = 44.0
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 5 )
 text = "Username"
 
 [node name="Username" type="LineEdit" parent="VBoxContainer"]
@@ -76,7 +76,7 @@ text = "congdanh"
 margin_top = 76.0
 margin_right = 322.0
 margin_bottom = 96.0
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 5 )
 text = "IP"
 
 [node name="IP" type="LineEdit" parent="VBoxContainer"]
