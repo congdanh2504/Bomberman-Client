@@ -12,7 +12,7 @@ func _ready():
 	#Networking.connect("connect_success", self, "")
 
 func on_kick(message):
-	dialog._set_caption("asdasd")
+	dialog._set_caption("Warning")
 	dialog._set_info(message)
 	dialog._show_dialog()
 	kick_timer.start()
@@ -24,7 +24,7 @@ func _on_kick_timeout():
 
 func _on_NewRoomButton_pressed():
 	Networking.createRoom()
-	
+	Global.set_roomname("Room of " + Global.get_username())
 
 func _update_rooms(rooms):
 	for n in box.get_children():
@@ -33,4 +33,13 @@ func _update_rooms(rooms):
 	for i in range(0, len(rooms)):
 		var newButton = button.instance()
 		newButton.text = rooms[i].roomName + ": " + str(rooms[i].length) + "/4"
+		for j in range(0, len(rooms[i].players)):
+			if rooms[i].players[j].username== Global.get_username():
+				get_tree().change_scene("res://scenes/Room.tscn")
 		box.add_child(newButton)
+		newButton.connect("on_click", self, "on_button_click")
+
+
+func on_button_click(name):
+	Global.set_roomname(name)
+	Networking.join_room(name)

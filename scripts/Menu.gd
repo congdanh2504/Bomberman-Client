@@ -8,5 +8,6 @@ func validate():
 	Global.set_username(input_username.text)
 	return get_tree().change_scene("res://scenes/Rooms.tscn")
 
+
 func _on_Button_pressed():
 	validate()

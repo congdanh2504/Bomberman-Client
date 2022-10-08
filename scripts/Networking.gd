@@ -5,6 +5,7 @@ var ws = WebSocketClient.new()
 signal kick(message)
 signal connnect_success
 signal update_rooms(rooms)
+signal load_room(players)
 
 func ready():
 	self.connection()
@@ -53,6 +54,9 @@ func _client_received():
 		
 	if type == "updateRoom":
 		emit_signal("update_rooms", resultJSON.result.data)
+		
+	if type == "loadRoom":
+		emit_signal("load_room", resultJSON.result.players)
 	
 func createRoom():
 	ws.get_peer(1).put_var({
@@ -60,4 +64,20 @@ func createRoom():
 	})	
 	
 	
+func join_room(room_name):
+	ws.get_peer(1).put_var({
+		"type": 'onJoinRoom',
+		"roomName": room_name
+	})	
+	
+func get_room_players(room_name):
+	ws.get_peer(1).put_var({
+		"type": 'onGetRoomPlayers',
+		"roomName": room_name
+	})	
 
+func left_room(room_name):
+	ws.get_peer(1).put_var({
+		"type": 'onLeftRoom',
+		"roomName": room_name
+	})	
