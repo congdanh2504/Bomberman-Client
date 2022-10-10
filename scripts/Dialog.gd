@@ -13,40 +13,40 @@ var inputtext = ''
 
 signal dialogResponse
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	self._hide_dialog()
-	pass # Replace with function body.
+
 
 func _show_dialog():
 	self.visible = true
 	PANEL.visible = true
 
+
 func _hide_dialog():
 	self.visible = false
 	PANEL.visible = false
 
+
 func _input(event):
-	# Mouse in viewport coordinates.
 	if event is InputEventMouseMotion:
 		if move_panel and event.pressure > 0:
 			var position = Vector2(event.position)
 			position.x -= 540
 			position.y -= 150
-			
 			PANEL.set_position(position)
 	  
 
 func _on_Caption_mouse_entered():
 	move_panel = true
-	pass # Replace with function body.
+
 
 func _on_Caption_mouse_exited():
 	move_panel = false
-	pass # Replace with function body.
+
 
 func _set_caption(title:String):
 	Caption.text = title
+	
 	
 func _set_info(info:String):
 	Info.text = info

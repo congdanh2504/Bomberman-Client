@@ -9,7 +9,7 @@ func _ready():
 	Networking.ready()
 	Networking.connect("kick", self, "on_kick")
 	Networking.connect("update_rooms", self, "_update_rooms")
-	#Networking.connect("connect_success", self, "")
+
 
 func on_kick(message):
 	dialog._set_caption("Warning")
@@ -43,3 +43,8 @@ func _update_rooms(rooms):
 func on_button_click(name):
 	Global.set_roomname(name)
 	Networking.join_room(name)
+
+
+func _on_LogOutButton_pressed():
+	Networking.log_out()
+	get_tree().change_scene("res://scenes/Menu.tscn")

@@ -8,6 +8,7 @@
 [ext_resource path="res://assets/fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=6]
 
 [sub_resource type="DynamicFont" id=1]
+size = 14
 font_data = ExtResource( 6 )
 
 [node name="Rooms" type="Node2D"]
@@ -21,20 +22,6 @@ margin_bottom = 772.0
 rect_scale = Vector2( 0.7, 0.7 )
 texture = ExtResource( 3 )
 
-[node name="Sprite" type="Sprite" parent="."]
-position = Vector2( 322, 161.5 )
-scale = Vector2( 1.68, 1.49444 )
-texture = ExtResource( 5 )
-region_enabled = true
-region_rect = Rect2( 0, 0, 350, 180 )
-
-[node name="Sprite2" type="Sprite" parent="."]
-position = Vector2( 322, 160.5 )
-scale = Vector2( 2.44091, 1.84167 )
-texture = ExtResource( 4 )
-region_enabled = true
-region_rect = Rect2( 0, 0, 220, 120 )
-
 [node name="kick" type="Timer" parent="."]
 wait_time = 2.0
 one_shot = true
@@ -42,27 +29,40 @@ one_shot = true
 [node name="Dialog" parent="." instance=ExtResource( 2 )]
 visible = false
 
+[node name="Sprite3" type="Sprite" parent="."]
+position = Vector2( 152, 152 )
+texture = ExtResource( 5 )
+region_enabled = true
+region_rect = Rect2( -720, 190, 260, 260 )
+
+[node name="Sprite4" type="Sprite" parent="."]
+position = Vector2( 152, 152 )
+texture = ExtResource( 4 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 220, 220 )
+
 [node name="NewRoomButton" type="Button" parent="."]
-margin_left = 145.0
-margin_top = 280.0
-margin_right = 242.0
-margin_bottom = 300.0
+margin_left = 51.0
+margin_top = 260.0
+margin_right = 145.0
+margin_bottom = 286.0
 custom_fonts/font = SubResource( 1 )
-text = "Create new room"
+text = "New room"
 
 [node name="LogOutButton" type="Button" parent="."]
-margin_left = 349.0
-margin_top = 280.0
-margin_right = 462.0
-margin_bottom = 300.0
+margin_left = 169.0
+margin_top = 261.0
+margin_right = 253.0
+margin_bottom = 287.0
 custom_fonts/font = SubResource( 1 )
 text = "Logout"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-margin_left = 55.0
-margin_top = 49.0
-margin_right = 590.0
-margin_bottom = 271.0
+margin_left = 48.0
+margin_top = 48.0
+margin_right = 256.0
+margin_bottom = 256.0
 
 [connection signal="timeout" from="kick" to="." method="_on_kick_timeout"]
 [connection signal="pressed" from="NewRoomButton" to="." method="_on_NewRoomButton_pressed"]
+[connection signal="pressed" from="LogOutButton" to="." method="_on_LogOutButton_pressed"]

@@ -6,6 +6,8 @@ signal kick(message)
 signal connnect_success
 signal update_rooms(rooms)
 signal load_room(players)
+signal start_game(stones, players)
+signal update_pos(id, x, y, animation)
 
 func ready():
 	self.connection()
@@ -47,16 +49,23 @@ func _client_received():
 	
 	var type = resultJSON.result.type
 	
-	print(type)
+#	print(type)
+	var data = resultJSON.result
 	
 	if type == "kick":
-		emit_signal("kick", resultJSON.result.message)
+		emit_signal("kick", data.message)
 		
 	if type == "updateRoom":
-		emit_signal("update_rooms", resultJSON.result.data)
+		emit_signal("update_rooms", data.data)
 		
 	if type == "loadRoom":
-		emit_signal("load_room", resultJSON.result.players)
+		emit_signal("load_room", data.players)
+		
+	if type == "startGame":
+		emit_signal("start_game", data.data.stones, data.data.players)
+		
+	if type == "updatePos":
+		emit_signal("update_pos", data.data.id, data.data.x, data.data.y, data.data.animation)
 	
 func createRoom():
 	ws.get_peer(1).put_var({
@@ -81,3 +90,24 @@ func left_room(room_name):
 		"type": 'onLeftRoom',
 		"roomName": room_name
 	})	
+	
+func start_game(room_name):
+	ws.get_peer(1).put_var({
+		"type": 'onStartGame',
+		"roomName": room_name
+	})
+
+func update_pos(id, x, y, animation, roomName):
+	ws.get_peer(1).put_var({
+		"type": 'onUpdatePos',
+		"data": {
+			"id": id,
+			"x": x,
+			"y": y,
+			"animation": animation,
+			"roomName": roomName
+		}
+	})
+
+func log_out():
+	ws.disconnect_from_host()
