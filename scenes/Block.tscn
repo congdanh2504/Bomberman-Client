@@ -10,10 +10,13 @@ extents = Vector2( 8, 8 )
 
 [node name="rock" type="Sprite" parent="."]
 texture = ExtResource( 2 )
+centered = false
 
 [node name="groundShadow" type="Sprite" parent="."]
 position = Vector2( 0, 16 )
 texture = ExtResource( 1 )
+centered = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 8, 8 )
 shape = SubResource( 1 )

@@ -15,3 +15,5 @@ region_rect = Rect2( 0, 0, 304, 304 )
 [node name="YSort" type="YSort" parent="."]
 
 [node name="Players" type="YSort" parent="YSort"]
+
+[node name="Bombs" type="YSort" parent="YSort"]

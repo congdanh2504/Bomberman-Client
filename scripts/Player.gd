@@ -5,6 +5,7 @@ var screen_size
 export var id = 0
 var direction = "Down"
 export var active = false
+signal drop_bomb(x, y)
 
 func _ready():
 	screen_size = get_viewport_rect().size
@@ -23,6 +24,12 @@ func client_play(animation):
 	
 func movement():
 	var velocity = Vector2.ZERO
+	
+	if Input.is_action_just_pressed("drop_bomb"):
+		if Stats.get_bomb_num() > 0:
+			Stats.decrease_bomb_num()
+			Networking.drop_bomb(position.x, position.y)
+		
 	
 	if Input.is_action_pressed("ui_right"):
 		velocity.x += 1
@@ -47,7 +54,7 @@ func movement():
 		$AnimatedSprite.animation = "idle%s_%s" % [direction, id]
 		
 	velocity = move_and_slide(velocity)
-	position.x = clamp(position.x, 0, screen_size.x)
-	position.y = clamp(position.y, 0, screen_size.y)
+	position.x = clamp(position.x, 0, screen_size.x - 14)
+	position.y = clamp(position.y, 0, screen_size.y - 14)
 
 	Networking.update_pos(id, position.x, position.y, $AnimatedSprite.animation, Global.get_roomname())
