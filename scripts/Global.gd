@@ -5,6 +5,7 @@ var serve_ip = '127.0.0.1:8080'
 var room_name = ''
 var stones
 var players
+var items
 
 func get_username() -> String:
 	return username
@@ -38,3 +39,9 @@ func get_players():
 	
 func set_players(_players):
 	players = _players
+	
+func get_items():
+	return items
+	
+func set_items(value):
+	items = value

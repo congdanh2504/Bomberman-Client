@@ -24,11 +24,12 @@ func client_play(animation):
 	
 func movement():
 	var velocity = Vector2.ZERO
-	
+	var map = Map.get_map()
 	if Input.is_action_just_pressed("drop_bomb"):
 		if Stats.get_bomb_num() > 0:
 			Stats.decrease_bomb_num()
-			Networking.drop_bomb(position.x, position.y)
+			Networking.drop_bomb(position.x, position.y, Stats.get_bomb_range(), id)
+			
 		
 	
 	if Input.is_action_pressed("ui_right"):
@@ -49,7 +50,7 @@ func movement():
 		direction = "Up"
 
 	if velocity.length() > 0:
-		velocity = velocity.normalized() * speed
+		velocity = velocity.normalized() * Stats.get_speed()
 	else:
 		$AnimatedSprite.animation = "idle%s_%s" % [direction, id]
 		

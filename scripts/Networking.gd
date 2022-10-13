@@ -6,9 +6,9 @@ signal kick(message)
 signal connnect_success
 signal update_rooms(rooms)
 signal load_room(players)
-signal start_game(stones, players)
+signal start_game(stones, items, players)
 signal update_pos(id, x, y, animation)
-signal drop_bomb(x, y)
+signal drop_bomb(x, y, bomb_range, your_bomb)
 
 func ready():
 	self.connection()
@@ -63,13 +63,13 @@ func _client_received():
 		emit_signal("load_room", data.players)
 		
 	if type == "startGame":
-		emit_signal("start_game", data.data.stones, data.data.players)
+		emit_signal("start_game", data.data.blocks.stones, data.data.blocks.items, data.data.players)
 		
 	if type == "updatePos":
 		emit_signal("update_pos", data.data.id, data.data.x, data.data.y, data.data.animation)
 		
 	if type == "dropBomb":
-		emit_signal("drop_bomb", data.data.x, data.data.y)
+		emit_signal("drop_bomb", data.data.x, data.data.y, data.data.bombRange, data.data.yourBomb)
 	
 func createRoom():
 	ws.get_peer(1).put_var({
@@ -113,12 +113,14 @@ func update_pos(id, x, y, animation, roomName):
 		}
 	})
 	
-func drop_bomb(x, y):
+func drop_bomb(x, y, bomb_range, id):
 	ws.get_peer(1).put_var({
 		"type": 'onDropBomb',
 		"data": {
 			"x": x,
-			"y": y
+			"y": y,
+			"bombRange": bomb_range,
+			"id": id
 		}
 	})
 

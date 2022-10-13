@@ -4,7 +4,9 @@ onready var animation = $Sprite
 onready var collision = $CollisionShape2D
 onready var goOff = $GoOffTimer
 onready var colli = $ColliTimer
-signal go_off(x, y)
+var bomb_range = 2
+var your_bomb = false
+signal go_off(x, y, bomb_range)
 
 
 func _ready():
@@ -15,8 +17,7 @@ func _ready():
 
 
 func _on_GoOffTimer_timeout():
-	emit_signal("go_off", position.x, position.y)
-	Stats.increase_bomb_num()
+	emit_signal("go_off", position.x, position.y, bomb_range, your_bomb)
 	queue_free()
 
 

@@ -5,12 +5,14 @@ var Stone = preload("res://scenes/Stone.tscn")
 var Player = preload("res://scenes/Player.tscn")
 var Bomb = preload("res://scenes/Bomb.tscn")
 var Explosion = preload("res://scenes/Explosion.tscn")
+var Item = preload("res://scenes/Item.tscn")
 const BLOCK = 1
 const STONE = 2
 const BLOCK_SIZE = 16
 onready var playersNode = $YSort/Players
 onready var ysort = $YSort
 onready var bombs = $YSort/Bombs
+onready var itemsNode = $Items
 var rng = RandomNumberGenerator.new()
 
 func new_block(x, y):
@@ -30,7 +32,6 @@ func new_stone(x, y):
 	
 func _ready():
 	rng.randomize()
-#	var activePlayer = playersNode.get_child(0)
 	Networking.connect("drop_bomb", self, "_drop_bomb")
 	Networking.connect("update_pos", self, "_update_pos")
 
@@ -54,6 +55,13 @@ func _ready():
 	for i in range(0, len(stones)):
 		Map.set_value(stones[i].x/BLOCK_SIZE, stones[i].y/BLOCK_SIZE, STONE)
 		ysort.add_child(new_stone(stones[i].x, stones[i].y))
+		
+	var items = Global.get_items()
+	for item in items:
+		var new_item = Item.instance()
+		new_item.id = item.type
+		new_item.position = Vector2(item.x, item.y)
+		itemsNode.add_child(new_item)
 
 	var players = Global.get_players()
 	for player in players:
@@ -63,7 +71,7 @@ func _ready():
 		new_player.id = player.id
 		playersNode.add_child(new_player)
 
-func _go_off(x, y):
+func _go_off(x, y, bomb_range, your_bomb):
 	var exlosion = Explosion.instance()
 	exlosion.play("start")
 	exlosion.position.x = x
@@ -73,14 +81,14 @@ func _go_off(x, y):
 	var index_x = x/BLOCK_SIZE
 	var index_y = y/BLOCK_SIZE
 
-	for i in range(1, Stats.get_bomb_range()+1):
+	for i in range(1, bomb_range+1):
 		var new_x = x + i*BLOCK_SIZE
 		var new_y = y
 		if invalid_position(new_x, new_y): 
 			break
 		if Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 0:
 			var exlosionRight = Explosion.instance()
-			if i == Stats.get_bomb_range():
+			if i == bomb_range:
 				exlosionRight.play("end_ver")
 			else:
 				exlosionRight.play("mid_ver")
@@ -95,14 +103,14 @@ func _go_off(x, y):
 		else:
 			break	
 	
-	for i in range(1, Stats.get_bomb_range()+1):
+	for i in range(1, bomb_range+1):
 		var new_x = x - i*BLOCK_SIZE
 		var new_y = y
 		if invalid_position(new_x, new_y): 
 			break
 		if Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 0:
 			var exlosionLeft = Explosion.instance()
-			if i == Stats.get_bomb_range():
+			if i == bomb_range:
 				exlosionLeft.play("end_ver")
 				exlosionLeft.flip_h = true
 			else:
@@ -118,14 +126,14 @@ func _go_off(x, y):
 		else:
 			break
 		
-	for i in range(1, Stats.get_bomb_range()+1):
+	for i in range(1, bomb_range+1):
 		var new_x = x
 		var new_y = y + i*BLOCK_SIZE
 		if invalid_position(new_x, new_y): 
 			break
 		if Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 0:
 			var exlosionUp = Explosion.instance()
-			if i == Stats.get_bomb_range():
+			if i == bomb_range:
 				exlosionUp.play("end_hori")
 				exlosionUp.flip_v = true
 			else:
@@ -141,14 +149,14 @@ func _go_off(x, y):
 		else:
 			break
 		
-	for i in range(1, Stats.get_bomb_range()+1):
+	for i in range(1, bomb_range+1):
 		var new_x = x
 		var new_y = y - i*BLOCK_SIZE
 		if invalid_position(new_x, new_y): 
 			break
 		if Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 0:
 			var exlosionDown = Explosion.instance()
-			if i == Stats.get_bomb_range():
+			if i == bomb_range:
 				exlosionDown.play("end_hori")
 			else:
 				exlosionDown.play("mid_hori")
@@ -161,11 +169,14 @@ func _go_off(x, y):
 			break
 		else:
 			break
+			
+	if your_bomb:
+		Stats.increase_bomb_num()
 	
 func invalid_position(x, y):
 	return x/BLOCK_SIZE >= 19 or y/BLOCK_SIZE >= 19 or x/BLOCK_SIZE < 0 or y/BLOCK_SIZE < 0
 
-func _drop_bomb(x, y):
+func _drop_bomb(x, y, bomb_range, your_bomb):
 	var bomb = Bomb.instance()
 	x = int(x) 
 	y = int(y) 
@@ -186,6 +197,8 @@ func _drop_bomb(x, y):
 	if y > 298:
 		y -= BLOCK_SIZE
 	bomb.position = Vector2(x, y)
+	bomb.bomb_range = bomb_range
+	bomb.your_bomb = your_bomb
 	bombs.add_child(bomb)
 	bomb.connect("go_off", self, "_go_off")
 	

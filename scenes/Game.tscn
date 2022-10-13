@@ -12,6 +12,8 @@ texture = ExtResource( 1 )
 region_enabled = true
 region_rect = Rect2( 0, 0, 304, 304 )
 
+[node name="Items" type="Node2D" parent="."]
+
 [node name="YSort" type="YSort" parent="."]
 
 [node name="Players" type="YSort" parent="YSort"]

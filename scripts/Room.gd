@@ -47,7 +47,8 @@ func _on_StartButton_pressed():
 	Networking.start_game(Global.get_roomname())
 	
 	
-func _start_game(stones, players):
+func _start_game(stones, items, players):
 	Global.set_stones(stones)
+	Global.set_items(items)
 	Global.set_players(players)
 	get_tree().change_scene("res://scenes/Game.tscn")
