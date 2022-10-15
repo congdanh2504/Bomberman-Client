@@ -543,12 +543,12 @@ animations = [ {
 "speed": 8.0
 }, {
 "frames": [ SubResource( 55 ), SubResource( 56 ), SubResource( 57 ), SubResource( 58 ), SubResource( 59 ), SubResource( 60 ) ],
-"loop": true,
+"loop": false,
 "name": "die_2",
 "speed": 8.0
 }, {
 "frames": [ SubResource( 81 ), SubResource( 82 ), SubResource( 83 ), SubResource( 84 ), SubResource( 85 ), SubResource( 86 ) ],
-"loop": true,
+"loop": false,
 "name": "die_3",
 "speed": 8.0
 }, {
@@ -718,12 +718,13 @@ radius = 11.0
 height = 0.0
 
 [node name="Player" type="KinematicBody2D"]
-collision_mask = 3
+collision_mask = 6
 script = ExtResource( 3 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 27 )
 animation = "die_3"
+frame = 5
 playing = true
 centered = false
 offset = Vector2( 0, -8 )
@@ -732,3 +733,5 @@ offset = Vector2( 0, -8 )
 position = Vector2( 8, 8 )
 scale = Vector2( 0.7, 0.7 )
 shape = SubResource( 28 )
+
+[connection signal="animation_finished" from="AnimatedSprite" to="." method="_on_AnimatedSprite_animation_finished"]

@@ -13,6 +13,8 @@ onready var playersNode = $YSort/Players
 onready var ysort = $YSort
 onready var bombs = $YSort/Bombs
 onready var itemsNode = $Items
+onready var dialog = $Dialog
+onready var outGame = $OutGame
 var rng = RandomNumberGenerator.new()
 
 func new_block(x, y):
@@ -20,37 +22,27 @@ func new_block(x, y):
 	block.position.x = x
 	block.position.y = y
 	return block
-	
-	
+
+
 func new_stone(x, y):
 	var stone = Stone.instance()
 	stone.position.x = x
 	stone.position.y = y
 	Map.set_value_stone(x/BLOCK_SIZE, y/BLOCK_SIZE, stone)
 	return stone
-	
-	
+
+
 func _ready():
 	rng.randomize()
 	Networking.connect("drop_bomb", self, "_drop_bomb")
 	Networking.connect("update_pos", self, "_update_pos")
+	Networking.connect("remove_player", self, "_remove_player")
 
 	for i in range(BLOCK_SIZE, 300, 32):
 		for j in range(BLOCK_SIZE, 300, 32):
 			ysort.add_child(new_block(j, i))
 			Map.set_value(j/BLOCK_SIZE, i/BLOCK_SIZE, BLOCK)
 
-	# For test
-#	var rng = RandomNumberGenerator.new()
-#	for i in range(BLOCK_SIZE, 284, BLOCK_SIZE):
-#		for j in range(BLOCK_SIZE, 284, BLOCK_SIZE):	
-#			if (i - BLOCK_SIZE)% 32 == 0 and (j-BLOCK_SIZE)%32 == 0: continue
-#			rng.randomize()
-#			var rand = rng.randi_range(0, 10)
-#			if rand > 3:
-#				ysort.add_child(new_stone(j, i))
-#				Map.set_value(j/BLOCK_SIZE, i/BLOCK_SIZE, STONE)
-	
 	var stones = Global.get_stones()
 	for i in range(0, len(stones)):
 		Map.set_value(stones[i].x/BLOCK_SIZE, stones[i].y/BLOCK_SIZE, STONE)
@@ -69,7 +61,11 @@ func _ready():
 		new_player.update_pos(player.pos.x, player.pos.y)
 		new_player.active = player.active
 		new_player.id = player.id
+		new_player.username = player.username
+		if player.active:
+			new_player.connect("lose_game", self, "_lose_game")
 		playersNode.add_child(new_player)
+
 
 func _go_off(x, y, bomb_range, your_bomb):
 	var exlosion = Explosion.instance()
@@ -172,9 +168,11 @@ func _go_off(x, y, bomb_range, your_bomb):
 			
 	if your_bomb:
 		Stats.increase_bomb_num()
-	
+
+
 func invalid_position(x, y):
 	return x/BLOCK_SIZE >= 19 or y/BLOCK_SIZE >= 19 or x/BLOCK_SIZE < 0 or y/BLOCK_SIZE < 0
+
 
 func _drop_bomb(x, y, bomb_range, your_bomb):
 	var bomb = Bomb.instance()
@@ -200,12 +198,42 @@ func _drop_bomb(x, y, bomb_range, your_bomb):
 	bomb.bomb_range = bomb_range
 	bomb.your_bomb = your_bomb
 	bombs.add_child(bomb)
+	if your_bomb:
+		bomb.collision.disabled = true
 	bomb.connect("go_off", self, "_go_off")
 	
 
-func _update_pos(id, x, y, animation):
+func _update_pos(username, x, y, animation):
 	var players = playersNode.get_children()
 	for player in players:
-		if player.id == id:
+		if player.username == username and player.died == false:
 			player.update_pos(x, y)
 			player.client_play(animation)
+
+func _remove_player(username):
+	var players = playersNode.get_children()
+	for player in players:
+		if player.username == username:
+			playersNode.remove_child(player)
+
+	if len(playersNode.get_children()) == 1:
+		win_game()
+
+
+func _lose_game():
+	dialog._set_caption("You lose!")
+	dialog._set_info("You lose!")
+	dialog._show_dialog()
+	outGame.start()
+	Networking.left_room()
+
+
+func win_game():
+	dialog._set_caption("You win!")
+	dialog._set_info("You win!")
+	dialog._show_dialog()
+	outGame.start()
+	Networking.left_room()
+
+func _on_OutGame_timeout():
+	get_tree().change_scene("res://scenes/Rooms.tscn")

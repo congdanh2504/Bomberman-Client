@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://assets/image/Ground.png" type="Texture" id=1]
 [ext_resource path="res://scripts/Game.gd" type="Script" id=2]
+[ext_resource path="res://scenes/Dialog.tscn" type="PackedScene" id=3]
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 2 )
@@ -19,3 +20,14 @@ region_rect = Rect2( 0, 0, 304, 304 )
 [node name="Players" type="YSort" parent="YSort"]
 
 [node name="Bombs" type="YSort" parent="YSort"]
+
+[node name="Dialog" parent="." instance=ExtResource( 3 )]
+margin_left = 40.0
+margin_top = 88.0
+margin_right = 280.0
+margin_bottom = 216.0
+
+[node name="OutGame" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="OutGame" to="." method="_on_OutGame_timeout"]

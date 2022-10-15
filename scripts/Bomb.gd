@@ -10,10 +10,10 @@ signal go_off(x, y, bomb_range)
 
 
 func _ready():
-	collision.disabled = true
+#	collision.disabled = true
 	animation.play("idle")
 	goOff.start()
-	colli.start()
+#	colli.start()
 
 
 func _on_GoOffTimer_timeout():
@@ -21,5 +21,5 @@ func _on_GoOffTimer_timeout():
 	queue_free()
 
 
-func _on_ColliTimer_timeout():
-	collision.disabled = false
+#func _on_ColliTimer_timeout():
+#	collision.disabled = false

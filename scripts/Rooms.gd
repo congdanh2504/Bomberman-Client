@@ -1,8 +1,8 @@
 extends Node2D
 
 onready var kick_timer = $kick
-onready var dialog = $Dialog
 onready var box = $VBoxContainer
+onready var dialog = $Dialog
 var button = preload("res://scenes/ButtonLine.tscn")
 
 func _ready():

@@ -1,4 +1,4 @@
-[gd_scene load_steps=48 format=2]
+[gd_scene load_steps=49 format=2]
 
 [ext_resource path="res://assets/image/ExplosionMiddle.png" type="Texture" id=1]
 [ext_resource path="res://assets/image/ExplosionStart.png" type="Texture" id=2]
@@ -219,10 +219,21 @@ animations = [ {
 "speed": 15.0
 } ]
 
+[sub_resource type="RectangleShape2D" id=42]
+extents = Vector2( 8, 8 )
+
 [node name="AnimatedSprite" type="AnimatedSprite"]
 frames = SubResource( 25 )
 animation = "start"
 centered = false
 script = ExtResource( 4 )
 
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( 8, 8 )
+shape = SubResource( 42 )
+
 [connection signal="animation_finished" from="." to="." method="_on_AnimatedSprite_animation_finished"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]

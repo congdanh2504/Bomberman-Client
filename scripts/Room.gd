@@ -34,7 +34,7 @@ func _update_room(rooms):
 
 
 func _on_ExitButton_pressed():
-	Networking.left_room(Global.get_roomname())
+	Networking.left_room()
 	exitRoom()
 	
 
@@ -51,4 +51,5 @@ func _start_game(stones, items, players):
 	Global.set_stones(stones)
 	Global.set_items(items)
 	Global.set_players(players)
+	Stats.reset()
 	get_tree().change_scene("res://scenes/Game.tscn")

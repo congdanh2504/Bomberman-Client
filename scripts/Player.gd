@@ -3,18 +3,31 @@ extends KinematicBody2D
 export var speed = 80
 var screen_size
 export var id = 0
+var username
 var direction = "Down"
-export var active = false
+var died = false
+export var active = false setget set_active
+var active2 = false
 signal drop_bomb(x, y)
+signal lose_game
 
 func _ready():
 	screen_size = get_viewport_rect().size
 	$AnimatedSprite.animation = "idle%s_%s" % [direction, id]
 	
+func set_active(value):
+	active = value
+	active2 = value
+	
 func _process(delta):
 	if active:
 		movement()
 	pass	
+	
+func die():
+	died = true
+	$AnimatedSprite.play("die_%s" % id)
+	active = false
 	
 func update_pos(x, y):
 	position = Vector2(x, y)
@@ -28,10 +41,8 @@ func movement():
 	if Input.is_action_just_pressed("drop_bomb"):
 		if Stats.get_bomb_num() > 0:
 			Stats.decrease_bomb_num()
-			Networking.drop_bomb(position.x, position.y, Stats.get_bomb_range(), id)
+			Networking.drop_bomb(position.x, position.y, Stats.get_bomb_range(), username)
 			
-		
-	
 	if Input.is_action_pressed("ui_right"):
 		velocity.x += 1
 		$AnimatedSprite.animation = "runRight_%s" % id
@@ -58,4 +69,11 @@ func movement():
 	position.x = clamp(position.x, 0, screen_size.x - 14)
 	position.y = clamp(position.y, 0, screen_size.y - 14)
 
-	Networking.update_pos(id, position.x, position.y, $AnimatedSprite.animation, Global.get_roomname())
+	Networking.update_pos(username, position.x, position.y, $AnimatedSprite.animation, Global.get_roomname())
+
+
+func _on_AnimatedSprite_animation_finished():
+	if $AnimatedSprite.animation == "die_%s" % id and active2:
+		queue_free()
+		emit_signal("lose_game")
+	pass

@@ -26,9 +26,6 @@ texture = ExtResource( 3 )
 wait_time = 2.0
 one_shot = true
 
-[node name="Dialog" parent="." instance=ExtResource( 2 )]
-visible = false
-
 [node name="Sprite3" type="Sprite" parent="."]
 position = Vector2( 152, 152 )
 texture = ExtResource( 5 )
@@ -62,6 +59,11 @@ margin_left = 48.0
 margin_top = 48.0
 margin_right = 256.0
 margin_bottom = 256.0
+
+[node name="Dialog" parent="." instance=ExtResource( 2 )]
+margin_top = 88.0
+margin_right = 32.0
+margin_bottom = 208.0
 
 [connection signal="timeout" from="kick" to="." method="_on_kick_timeout"]
 [connection signal="pressed" from="NewRoomButton" to="." method="_on_NewRoomButton_pressed"]
