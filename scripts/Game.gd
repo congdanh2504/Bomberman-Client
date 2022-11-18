@@ -15,7 +15,28 @@ onready var bombs = $YSort/Bombs
 onready var itemsNode = $Items
 onready var dialog = $Dialog
 onready var outGame = $OutGame
+onready var timeCounter = $VBoxContainer/Label
+onready var chat = $Panel/RichTextLabel
+onready var message = $Panel/LineEdit
 var rng = RandomNumberGenerator.new()
+var focus = false
+var time = 0
+
+
+func append_text(text:String, color:String = "#eeeeee"):
+	chat.push_color(Color(color))
+	chat.add_text('\n'+text)
+	chat.pop()
+
+
+func _process(delta):
+	time += delta
+	var secs = fmod(time, 60)
+	var mins = fmod(time, 60*60) / 60
+	
+	var time_passed = "%02d:%02d" % [mins, secs]
+	timeCounter.text = time_passed
+
 
 func new_block(x, y):
 	var block = Block.instance()
@@ -32,11 +53,29 @@ func new_stone(x, y):
 	return stone
 
 
+func _input(event):
+	if event is InputEventKey:
+		if event.pressed and event.scancode == KEY_ENTER:
+			if Global.get_is_chatting():
+				Networking.send_message(message.text)
+				message.text = ""
+				message.release_focus()
+				Global.set_is_chatting(false)
+			else:
+				message.grab_focus()
+				Global.set_is_chatting(true)
+
 func _ready():
 	rng.randomize()
 	Networking.connect("drop_bomb", self, "_drop_bomb")
 	Networking.connect("update_pos", self, "_update_pos")
 	Networking.connect("remove_player", self, "_remove_player")
+	Networking.connect("chat", self, "_on_chat")
+	message.connect("focus_entered", self, "_focus_entered")
+	chat.set_scroll_follow(true)
+	var tempChat = Global.get_temp_chat()
+	for msg in tempChat:
+		append_text(msg, "#00FF00")
 
 	for i in range(BLOCK_SIZE, 300, 32):
 		for j in range(BLOCK_SIZE, 300, 32):
@@ -65,6 +104,14 @@ func _ready():
 		if player.active:
 			new_player.connect("lose_game", self, "_lose_game")
 		playersNode.add_child(new_player)
+		
+		
+func _focus_entered():
+	Global.set_is_chatting(true)
+	
+	
+func _on_chat(message):
+	append_text(message)
 
 
 func _go_off(x, y, bomb_range, your_bomb):
@@ -221,6 +268,7 @@ func _remove_player(username):
 
 
 func _lose_game():
+	Global.clear_temp_chat()
 	dialog._set_caption("You lose!")
 	dialog._set_info("You lose!")
 	dialog._show_dialog()
@@ -229,6 +277,7 @@ func _lose_game():
 
 
 func win_game():
+	Global.clear_temp_chat()
 	dialog._set_caption("You win!")
 	dialog._set_info("You win!")
 	dialog._show_dialog()

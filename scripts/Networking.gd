@@ -10,6 +10,7 @@ signal start_game(stones, items, players)
 signal update_pos(username, x, y, animation)
 signal drop_bomb(x, y, bomb_range, your_bomb)
 signal remove_player(username)
+signal chat(message)
 
 func ready():
 	self.connection()
@@ -46,12 +47,8 @@ func _connection_error():
 	
 func _client_received():
 	var packet = ws.get_peer(1).get_packet()
-
 	var resultJSON = JSON.parse(packet.get_string_from_utf8())
-	
 	var type = resultJSON.result.type
-	
-#	print(type)
 	var data = resultJSON.result
 	
 	if type == "kick":
@@ -74,6 +71,11 @@ func _client_received():
 		
 	if type == "removePlayer":
 		emit_signal("remove_player", data.username)
+	
+	if type == "chat":
+		Global.append_temp_chat(data.message)
+		emit_signal("chat", data.message)
+	
 	
 func createRoom():
 	ws.get_peer(1).put_var({
@@ -125,6 +127,12 @@ func drop_bomb(x, y, bomb_range, username):
 			"bombRange": bomb_range,
 			"username": username
 		}
+	})
+	
+func send_message(message):
+	ws.get_peer(1).put_var({
+		"type": 'onChat',
+		"message": message
 	})
 
 func log_out():

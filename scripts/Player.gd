@@ -20,7 +20,7 @@ func set_active(value):
 	active2 = value
 	
 func _process(delta):
-	if active:
+	if active and not Global.get_is_chatting():
 		movement()
 	pass	
 	
@@ -66,7 +66,7 @@ func movement():
 		$AnimatedSprite.animation = "idle%s_%s" % [direction, id]
 		
 	velocity = move_and_slide(velocity)
-	position.x = clamp(position.x, 0, screen_size.x - 14)
+	position.x = clamp(position.x, 0, 290)
 	position.y = clamp(position.y, 0, screen_size.y - 14)
 
 	Networking.update_pos(username, position.x, position.y, $AnimatedSprite.animation, Global.get_roomname())

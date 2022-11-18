@@ -6,6 +6,8 @@ var room_name = ''
 var stones
 var players
 var items
+var isChatting = false
+var tempChat = []
 
 func get_username() -> String:
 	return username
@@ -45,3 +47,18 @@ func get_items():
 	
 func set_items(value):
 	items = value
+
+func set_is_chatting(value):
+	isChatting = value
+	
+func get_is_chatting():
+	return isChatting
+	
+func get_temp_chat():
+	return tempChat
+	
+func append_temp_chat(msg):
+	tempChat.append(msg)
+	
+func clear_temp_chat():
+	tempChat.clear()
