@@ -57,8 +57,11 @@ func get_is_chatting():
 func get_temp_chat():
 	return tempChat
 	
-func append_temp_chat(msg):
-	tempChat.append(msg)
+func append_temp_chat(msg, color):
+	tempChat.append({
+		"message": msg,
+		"color": color
+	})
 	
 func clear_temp_chat():
 	tempChat.clear()

@@ -1,7 +1,8 @@
 extends KinematicBody2D
 
 export var speed = 80
-var screen_size
+const width = Constant.width
+const height = Constant.height
 export var id = 0
 var username
 var direction = "Down"
@@ -12,7 +13,6 @@ signal drop_bomb(x, y)
 signal lose_game
 
 func _ready():
-	screen_size = get_viewport_rect().size
 	$AnimatedSprite.animation = "idle%s_%s" % [direction, id]
 	
 func set_active(value):
@@ -66,8 +66,8 @@ func movement():
 		$AnimatedSprite.animation = "idle%s_%s" % [direction, id]
 		
 	velocity = move_and_slide(velocity)
-	position.x = clamp(position.x, 0, 290)
-	position.y = clamp(position.y, 0, screen_size.y - 14)
+	position.x = clamp(position.x, 0, width - 14)
+	position.y = clamp(position.y, 0, height - 14)
 
 	Networking.update_pos(username, position.x, position.y, $AnimatedSprite.animation, Global.get_roomname())
 

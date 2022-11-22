@@ -6,16 +6,18 @@ var Player = preload("res://scenes/Player.tscn")
 var Bomb = preload("res://scenes/Bomb.tscn")
 var Explosion = preload("res://scenes/Explosion.tscn")
 var Item = preload("res://scenes/Item.tscn")
-const BLOCK = 1
-const STONE = 2
-const BLOCK_SIZE = 16
+const BLOCK = Constant.BLOCK
+const STONE = Constant.STONE
+const BLOCK_SIZE = Constant.BLOCK_SIZE
+var width = Constant.width
+var height = Constant.height
 onready var playersNode = $YSort/Players
 onready var ysort = $YSort
 onready var bombs = $YSort/Bombs
 onready var itemsNode = $Items
 onready var dialog = $Dialog
 onready var outGame = $OutGame
-onready var timeCounter = $VBoxContainer/Label
+onready var timeCounter = $Panel/Label
 onready var chat = $Panel/RichTextLabel
 onready var message = $Panel/LineEdit
 var rng = RandomNumberGenerator.new()
@@ -33,7 +35,6 @@ func _process(delta):
 	time += delta
 	var secs = fmod(time, 60)
 	var mins = fmod(time, 60*60) / 60
-	
 	var time_passed = "%02d:%02d" % [mins, secs]
 	timeCounter.text = time_passed
 
@@ -57,7 +58,8 @@ func _input(event):
 	if event is InputEventKey:
 		if event.pressed and event.scancode == KEY_ENTER:
 			if Global.get_is_chatting():
-				Networking.send_message(message.text)
+				if message.text != "":
+					Networking.send_message(message.text)
 				message.text = ""
 				message.release_focus()
 				Global.set_is_chatting(false)
@@ -74,11 +76,11 @@ func _ready():
 	message.connect("focus_entered", self, "_focus_entered")
 	chat.set_scroll_follow(true)
 	var tempChat = Global.get_temp_chat()
-	for msg in tempChat:
-		append_text(msg, "#00FF00")
+	for row in tempChat:
+		append_text(row['message'], row['color'])
 
-	for i in range(BLOCK_SIZE, 300, 32):
-		for j in range(BLOCK_SIZE, 300, 32):
+	for i in range(BLOCK_SIZE, height - 4, 32):
+		for j in range(BLOCK_SIZE, width - 4, 32):
 			ysort.add_child(new_block(j, i))
 			Map.set_value(j/BLOCK_SIZE, i/BLOCK_SIZE, BLOCK)
 
@@ -110,8 +112,8 @@ func _focus_entered():
 	Global.set_is_chatting(true)
 	
 	
-func _on_chat(message):
-	append_text(message)
+func _on_chat(message, color):
+	append_text(message, color)
 
 
 func _go_off(x, y, bomb_range, your_bomb):
@@ -218,7 +220,7 @@ func _go_off(x, y, bomb_range, your_bomb):
 
 
 func invalid_position(x, y):
-	return x/BLOCK_SIZE >= 19 or y/BLOCK_SIZE >= 19 or x/BLOCK_SIZE < 0 or y/BLOCK_SIZE < 0
+	return x/BLOCK_SIZE >= 39 or y/BLOCK_SIZE >= 19 or x/BLOCK_SIZE < 0 or y/BLOCK_SIZE < 0
 
 
 func _drop_bomb(x, y, bomb_range, your_bomb):
@@ -237,9 +239,9 @@ func _drop_bomb(x, y, bomb_range, your_bomb):
 		else:
 			y += BLOCK_SIZE- y%BLOCK_SIZE 
 			
-	if x > 298:
+	if x > width - 6:
 		x -= BLOCK_SIZE
-	if y > 298:
+	if y > height - 6:
 		y -= BLOCK_SIZE
 	bomb.position = Vector2(x, y)
 	bomb.bomb_range = bomb_range

@@ -10,7 +10,7 @@ signal start_game(stones, items, players)
 signal update_pos(username, x, y, animation)
 signal drop_bomb(x, y, bomb_range, your_bomb)
 signal remove_player(username)
-signal chat(message)
+signal chat(message, color)
 
 func ready():
 	self.connection()
@@ -73,8 +73,8 @@ func _client_received():
 		emit_signal("remove_player", data.username)
 	
 	if type == "chat":
-		Global.append_temp_chat(data.message)
-		emit_signal("chat", data.message)
+		Global.append_temp_chat(data.data.message, data.data.color)
+		emit_signal("chat", data.data.message, data.data.color)
 	
 	
 func createRoom():

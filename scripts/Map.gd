@@ -2,20 +2,23 @@ extends Node
 
 var map = []
 var mapStone = []
+var width = 624
+var height = 304
+var BLOCK_SIZE = 16
 
 func _ready():
 	reset()
 
 func reset():
 	mapStone = []
-	for i in range(19):
+	for i in range(width/BLOCK_SIZE):
 		mapStone.append([])
-		for j in range(19):
+		for j in range(height/BLOCK_SIZE):
 			mapStone[i].append(0)
 	map = []
-	for i in range(19):
+	for i in range(width/BLOCK_SIZE):
 		map.append([])
-		for j in range(19):
+		for j in range(height/BLOCK_SIZE):
 			map[i].append(0)
 
 func get_map():
