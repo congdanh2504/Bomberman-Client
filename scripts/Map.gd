@@ -14,7 +14,7 @@ func reset():
 	for i in range(width/BLOCK_SIZE):
 		mapStone.append([])
 		for j in range(height/BLOCK_SIZE):
-			mapStone[i].append(0)
+			mapStone[i].append(null)
 	map = []
 	for i in range(width/BLOCK_SIZE):
 		map.append([])

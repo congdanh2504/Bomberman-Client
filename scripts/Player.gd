@@ -40,7 +40,6 @@ func movement():
 	var map = Map.get_map()
 	if Input.is_action_just_pressed("drop_bomb"):
 		if Stats.get_bomb_num() > 0:
-			Stats.decrease_bomb_num()
 			Networking.drop_bomb(position.x, position.y, Stats.get_bomb_range(), username)
 			
 	if Input.is_action_pressed("ui_right"):

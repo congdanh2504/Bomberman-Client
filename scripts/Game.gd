@@ -72,7 +72,7 @@ func _ready():
 	Networking.connect("drop_bomb", self, "_drop_bomb")
 	Networking.connect("update_pos", self, "_update_pos")
 	Networking.connect("remove_player", self, "_remove_player")
-	Networking.connect("chat", self, "_on_chat")
+	Networking.connect("chat", self, "append_text")
 	message.connect("focus_entered", self, "_focus_entered")
 	chat.set_scroll_follow(true)
 	var tempChat = Global.get_temp_chat()
@@ -106,14 +106,10 @@ func _ready():
 		if player.active:
 			new_player.connect("lose_game", self, "_lose_game")
 		playersNode.add_child(new_player)
-		
-		
+
+
 func _focus_entered():
 	Global.set_is_chatting(true)
-	
-	
-func _on_chat(message, color):
-	append_text(message, color)
 
 
 func _go_off(x, y, bomb_range, your_bomb):
@@ -122,9 +118,6 @@ func _go_off(x, y, bomb_range, your_bomb):
 	exlosion.position.x = x
 	exlosion.position.y = y
 	add_child(exlosion)
-	
-	var index_x = x/BLOCK_SIZE
-	var index_y = y/BLOCK_SIZE
 
 	for i in range(1, bomb_range+1):
 		var new_x = x + i*BLOCK_SIZE
@@ -141,12 +134,13 @@ func _go_off(x, y, bomb_range, your_bomb):
 			exlosionRight.position.x = new_x
 			exlosionRight.position.y = new_y
 			add_child(exlosionRight)
-		elif Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 2:
-			Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE].destroy()
+		elif Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 2 and Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] != null:
 			Map.set_value(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, 0)
+			Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE].destroy()
+			Map.set_value_stone(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, null)
 			break
 		else:
-			break	
+			break
 	
 	for i in range(1, bomb_range+1):
 		var new_x = x - i*BLOCK_SIZE
@@ -164,9 +158,10 @@ func _go_off(x, y, bomb_range, your_bomb):
 			exlosionLeft.position.x = new_x
 			exlosionLeft.position.y = new_y
 			add_child(exlosionLeft)
-		elif Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 2:
-			Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE].destroy()
+		elif Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 2 and Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] != null:
 			Map.set_value(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, 0)
+			Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE].destroy()
+			Map.set_value_stone(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, null)
 			break
 		else:
 			break
@@ -187,9 +182,10 @@ func _go_off(x, y, bomb_range, your_bomb):
 			exlosionUp.position.x = new_x
 			exlosionUp.position.y = new_y
 			add_child(exlosionUp)
-		elif Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 2:
-			Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE].destroy()
+		elif Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 2 and Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] != null:
 			Map.set_value(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, 0)
+			Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE].destroy()
+			Map.set_value_stone(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, null)
 			break
 		else:
 			break
@@ -208,9 +204,10 @@ func _go_off(x, y, bomb_range, your_bomb):
 			exlosionDown.position.x = new_x
 			exlosionDown.position.y = new_y
 			add_child(exlosionDown)
-		elif Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 2:
-			Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE].destroy()
+		elif Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 2 and Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] != null:
 			Map.set_value(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, 0)
+			Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE].destroy()
+			Map.set_value_stone(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, null)
 			break
 		else:
 			break
@@ -224,6 +221,8 @@ func invalid_position(x, y):
 
 
 func _drop_bomb(x, y, bomb_range, your_bomb):
+	if your_bomb:
+		Stats.decrease_bomb_num()
 	var bomb = Bomb.instance()
 	x = int(x) 
 	y = int(y) 
@@ -258,6 +257,7 @@ func _update_pos(username, x, y, animation):
 		if player.username == username and player.died == false:
 			player.update_pos(x, y)
 			player.client_play(animation)
+
 
 func _remove_player(username):
 	var players = playersNode.get_children()
