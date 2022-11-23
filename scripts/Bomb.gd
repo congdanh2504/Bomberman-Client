@@ -16,4 +16,4 @@ func _ready():
 
 func _on_GoOffTimer_timeout():
 	emit_signal("go_off", position.x, position.y, bomb_range, your_bomb)
-	queue_free()
+	call_deferred("free")

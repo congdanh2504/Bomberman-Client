@@ -5,6 +5,7 @@ onready var box = $VBoxContainer
 onready var startButton = $StartButton
 
 func _ready():
+	Global.clear_temp_chat()
 	Networking.get_room_players(Global.get_roomname())
 	Networking.connect("load_room", self, "_load_room")
 	Networking.connect("update_rooms", self, "_update_room")
