@@ -27,6 +27,11 @@ func get_map():
 func get_map_stone():
 	return mapStone
 	
+
+func check_is_stone(x, y):
+	return map[x/BLOCK_SIZE][y/BLOCK_SIZE] == 2 and is_instance_valid(mapStone[x/BLOCK_SIZE][y/BLOCK_SIZE])
+
+	
 func set_value_stone(x, y, v):
 	mapStone[x][y] = v
 	

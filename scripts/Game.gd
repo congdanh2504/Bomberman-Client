@@ -124,7 +124,12 @@ func _go_off(x, y, bomb_range, your_bomb):
 		var new_y = y
 		if invalid_position(new_x, new_y): 
 			break
-		if Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 0:
+		if Map.check_is_stone(new_x, new_y):
+			Map.set_value(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, 0)
+			Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE].destroy()
+			Map.set_value_stone(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, null)
+			break
+		elif Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 2 or Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 0:
 			var exlosionRight = Explosion.instance()
 			if i == bomb_range:
 				exlosionRight.play("end_ver")
@@ -134,11 +139,6 @@ func _go_off(x, y, bomb_range, your_bomb):
 			exlosionRight.position.x = new_x
 			exlosionRight.position.y = new_y
 			add_child(exlosionRight)
-		elif Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == STONE and is_instance_valid(Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE]):
-			Map.set_value(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, 0)
-			Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE].destroy()
-			Map.set_value_stone(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, null)
-			break
 		else:
 			break
 	
@@ -147,7 +147,12 @@ func _go_off(x, y, bomb_range, your_bomb):
 		var new_y = y
 		if invalid_position(new_x, new_y): 
 			break
-		if Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 0:
+		if Map.check_is_stone(new_x, new_y):
+			Map.set_value(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, 0)
+			Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE].destroy()
+			Map.set_value_stone(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, null)
+			break
+		elif Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 0 or Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 2:
 			var exlosionLeft = Explosion.instance()
 			if i == bomb_range:
 				exlosionLeft.play("end_ver")
@@ -158,11 +163,6 @@ func _go_off(x, y, bomb_range, your_bomb):
 			exlosionLeft.position.x = new_x
 			exlosionLeft.position.y = new_y
 			add_child(exlosionLeft)
-		elif Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == STONE and is_instance_valid(Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE]):
-			Map.set_value(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, 0)
-			Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE].destroy()
-			Map.set_value_stone(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, null)
-			break
 		else:
 			break
 		
@@ -171,7 +171,12 @@ func _go_off(x, y, bomb_range, your_bomb):
 		var new_y = y + i*BLOCK_SIZE
 		if invalid_position(new_x, new_y): 
 			break
-		if Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 0:
+		if Map.check_is_stone(new_x, new_y):
+			Map.set_value(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, 0)
+			Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE].destroy()
+			Map.set_value_stone(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, null)
+			break
+		elif Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 0 or Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 2:
 			var exlosionUp = Explosion.instance()
 			if i == bomb_range:
 				exlosionUp.play("end_hori")
@@ -182,11 +187,6 @@ func _go_off(x, y, bomb_range, your_bomb):
 			exlosionUp.position.x = new_x
 			exlosionUp.position.y = new_y
 			add_child(exlosionUp)
-		elif Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == STONE and is_instance_valid(Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE]):
-			Map.set_value(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, 0)
-			Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE].destroy()
-			Map.set_value_stone(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, null)
-			break
 		else:
 			break
 		
@@ -195,7 +195,12 @@ func _go_off(x, y, bomb_range, your_bomb):
 		var new_y = y - i*BLOCK_SIZE
 		if invalid_position(new_x, new_y): 
 			break
-		if Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 0:
+		if Map.check_is_stone(new_x, new_y):
+			Map.set_value(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, 0)
+			Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE].destroy()
+			Map.set_value_stone(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, null)
+			break
+		elif Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 0 or Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == 2:
 			var exlosionDown = Explosion.instance()
 			if i == bomb_range:
 				exlosionDown.play("end_hori")
@@ -204,11 +209,6 @@ func _go_off(x, y, bomb_range, your_bomb):
 			exlosionDown.position.x = new_x
 			exlosionDown.position.y = new_y
 			add_child(exlosionDown)
-		elif Map.get_map()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE] == STONE and is_instance_valid(Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE]):
-			Map.set_value(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, 0)
-			Map.get_map_stone()[new_x/BLOCK_SIZE][new_y/BLOCK_SIZE].destroy()
-			Map.set_value_stone(new_x/BLOCK_SIZE, new_y/BLOCK_SIZE, null)
-			break
 		else:
 			break
 			
@@ -285,6 +285,7 @@ func win_game():
 	dialog._show_dialog()
 	outGame.start()
 	Networking.left_room()
+
 
 func _on_OutGame_timeout():
 	get_tree().change_scene("res://scenes/Rooms.tscn")
