@@ -20,6 +20,9 @@ onready var outGame = $OutGame
 onready var timeCounter = $Panel/Label
 onready var chat = $Panel/RichTextLabel
 onready var message = $Panel/LineEdit
+onready var fire_abi = $Panel/fire
+onready var bomb_abi = $Panel/bomb
+onready var shoes_abi = $Panel/shoes
 var rng = RandomNumberGenerator.new()
 var focus = false
 var time = 0
@@ -36,6 +39,9 @@ func _process(delta):
 	var secs = fmod(time, 60)
 	var mins = fmod(time, 60*60) / 60
 	var time_passed = "%02d:%02d" % [mins, secs]
+	fire_abi.text = "x%d" % Stats.fire_abi
+	bomb_abi.text = "x%d" % Stats.bomb_abi
+	shoes_abi.text = "x%d" % Stats.shoes_abi
 	timeCounter.text = time_passed
 
 

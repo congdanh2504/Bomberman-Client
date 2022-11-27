@@ -4,6 +4,9 @@ extends Node
 var bomb_range = 2
 var bomb_num = 1
 var speed = 80
+var bomb_abi = 0
+var fire_abi = 0
+var shoes_abi = 0
 
 
 func reset():

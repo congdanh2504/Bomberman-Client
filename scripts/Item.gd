@@ -10,15 +10,17 @@ func _ready():
 		play("fire")
 	else:
 		play("speed")
-	
 
 
 func _on_Area2D_body_entered(body):
 	if body.active:
 		if id == 0:
+			Stats.bomb_abi += 1
 			Stats.increase_bomb_num()
 		elif id == 1:
+			Stats.fire_abi += 1
 			Stats.increase_bomb_range()
 		else:
+			Stats.shoes_abi += 1
 			Stats.increase_speed()
 	queue_free()
