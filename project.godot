@@ -21,6 +21,7 @@ Networking="*res://scripts/Networking.gd"
 Map="*res://scripts/Map.gd"
 Stats="*res://scripts/Stats.gd"
 Constant="*res://scripts/Constant.gd"
+AiStats="*res://scripts/AIStats.gd"
 
 [display]
 

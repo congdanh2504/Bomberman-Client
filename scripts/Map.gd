@@ -5,6 +5,9 @@ var mapStone = []
 var width = 624
 var height = 304
 var BLOCK_SIZE = 16
+var players_x = [0, 0, 0, 0]
+var players_y = [0, 0, 0, 0]
+var bomb_map = []
 
 func _ready():
 	reset()
@@ -20,6 +23,11 @@ func reset():
 		map.append([])
 		for j in range(height/BLOCK_SIZE):
 			map[i].append(0)
+	bomb_map = []
+	for i in range(width/BLOCK_SIZE):
+		bomb_map.append([])
+		for j in range(height/BLOCK_SIZE):
+			bomb_map[i].append(0)
 
 func get_map():
 	return map
@@ -34,6 +42,7 @@ func check_is_stone(x, y):
 	
 func set_value_stone(x, y, v):
 	mapStone[x][y] = v
-	
+
+
 func set_value(x, y, v):
 	map[x][y] = v

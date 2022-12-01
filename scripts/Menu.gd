@@ -11,3 +11,7 @@ func validate():
 
 func _on_Button_pressed():
 	validate()
+
+
+func _on_PlayWithBot_pressed():
+	return get_tree().change_scene("res://scenes/AIGame.tscn")

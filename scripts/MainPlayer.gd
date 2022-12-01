@@ -1,38 +1,35 @@
 extends KinematicBody2D
 
-export var speed = 80
 const width = Constant.width
 const height = Constant.height
+const BLOCK_SIZE = Constant.BLOCK_SIZE
 export var id = 0
 var username
 var direction = "Down"
 var died = false
-export var active = false setget set_active
-var active2 = false
+var active = true
 var is_ai = false
-signal drop_bomb(x, y)
+var active2 = false
+signal drop_bomb(x, y, bomb_range, bomb_type, id)
 signal lose_game
 
 func _ready():
 	$AnimatedSprite.animation = "idle%s_%s" % [direction, id]
-	
-func set_active(value):
-	active = value
-	active2 = value
-	
+
+
 func _process(delta):
-	if active and not Global.get_is_chatting():
-		movement()
-	pass	
-	
+	if active:
+		movement()	
+
+
 func die():
+	Map.players_x[id] = -1
+	Map.players_y[id] = -1
 	died = true
 	$AnimatedSprite.play("die_%s" % id)
 	active = false
-	
-func update_pos(x, y):
-	position = Vector2(x, y)
-	
+
+
 func client_play(animation):
 	$AnimatedSprite.animation = animation
 	
@@ -41,7 +38,7 @@ func movement():
 	var map = Map.get_map()
 	if Input.is_action_just_pressed("drop_bomb"):
 		if Stats.get_bomb_num() > 0:
-			Networking.drop_bomb(position.x, position.y, Stats.get_bomb_range(), username)
+			emit_signal("drop_bomb", position.x, position.y, Stats.get_bomb_range(), true, id)
 			
 	if Input.is_action_pressed("ui_right"):
 		velocity.x += 1
@@ -64,12 +61,12 @@ func movement():
 		velocity = velocity.normalized() * Stats.get_speed()
 	else:
 		$AnimatedSprite.animation = "idle%s_%s" % [direction, id]
-		
+		"res://scripts/MainPlayer.gd"
 	velocity = move_and_slide(velocity)
 	position.x = clamp(position.x, 0, width - 14)
 	position.y = clamp(position.y, 0, height - 14)
-
-	Networking.update_pos(username, position.x, position.y, $AnimatedSprite.animation, Global.get_roomname())
+	Map.players_x[id] = int(position.x/BLOCK_SIZE)
+	Map.players_y[id] = int(position.y/BLOCK_SIZE)
 
 
 func _on_AnimatedSprite_animation_finished():

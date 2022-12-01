@@ -74,10 +74,21 @@ margin_right = 260.0
 margin_bottom = 124.0
 text = "127.0.0.1:8888"
 
-[node name="Button" type="Button" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 128.0
 margin_right = 260.0
 margin_bottom = 148.0
+
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_right = 46.0
+margin_bottom = 20.0
 text = "Login"
 
-[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_Button_pressed"]
+[node name="PlayWithBot" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 50.0
+margin_right = 185.0
+margin_bottom = 20.0
+text = "Play with computer"
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/PlayWithBot" to="." method="_on_PlayWithBot_pressed"]

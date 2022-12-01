@@ -5,3 +5,4 @@ const height = 304
 const BLOCK_SIZE = 16
 const BLOCK = 1
 const STONE = 2
+const BOMB = 3

@@ -75,6 +75,7 @@ func _input(event):
 
 func _ready():
 	rng.randomize()
+	Map.reset()
 	Networking.connect("drop_bomb", self, "_drop_bomb")
 	Networking.connect("update_pos", self, "_update_pos")
 	Networking.connect("remove_player", self, "_remove_player")
@@ -118,7 +119,7 @@ func _focus_entered():
 	Global.set_is_chatting(true)
 
 
-func _go_off(x, y, bomb_range, your_bomb):
+func _go_off(x, y, bomb_range, your_bomb, player_id):
 	var exlosion = Explosion.instance()
 	exlosion.play("start")
 	exlosion.position.x = x

@@ -1,18 +1,14 @@
 extends AnimatedSprite
 
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
+var BLOCK_SIZE = Constant.BLOCK_SIZE
 
 
 func _on_AnimatedSprite_animation_finished():
+	var x = int(position.x/BLOCK_SIZE)
+	var y = int(position.y/BLOCK_SIZE)
+	if Map.bomb_map[x][y] > 0:
+		Map.bomb_map[x][y] -= 1
 	queue_free()
 
 
