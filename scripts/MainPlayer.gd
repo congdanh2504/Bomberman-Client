@@ -11,7 +11,7 @@ var active = true
 var is_ai = false
 var active2 = false
 signal drop_bomb(x, y, bomb_range, bomb_type, id)
-signal lose_game
+signal die
 
 func _ready():
 	$AnimatedSprite.animation = "idle%s_%s" % [direction, id]
@@ -26,6 +26,7 @@ func die():
 	Map.players_x[id] = -1
 	Map.players_y[id] = -1
 	died = true
+	emit_signal("die")
 	$AnimatedSprite.play("die_%s" % id)
 	active = false
 

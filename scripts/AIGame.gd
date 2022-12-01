@@ -159,16 +159,16 @@ func _ready():
 	ai_player.connect("drop_bomb", self, "_drop_bomb")
 	ai_player2.connect("drop_bomb", self, "_drop_bomb")
 	ai_player3.connect("drop_bomb", self, "_drop_bomb")
+	main_player.connect("die", self, "_on_die")
+	ai_player.connect("die", self, "_on_die")
+	ai_player2.connect("die", self, "_on_die")
+	ai_player3.connect("die", self, "_on_die")
 	for i in range(BLOCK_SIZE, height - 4, 32):
 		for j in range(BLOCK_SIZE, width - 4, 32):
 			ysort.add_child(new_block(j, i))
 
 			
 func _process(delta):
-	if main_player.died:
-		_lose_game()
-	if ai_player.died and ai_player2.died and ai_player3.died:
-		win_game()
 	time += delta
 	var secs = fmod(time, 60)
 	var mins = fmod(time, 60*60) / 60
@@ -178,6 +178,15 @@ func _process(delta):
 	shoes_abi.text = "x%d" % Stats.shoes_abi
 	timeCounter.text = time_passed
 	
+	
+func _on_die():
+	if main_player.died:
+		_lose_game()
+		return
+	if ai_player.died and ai_player2.died and ai_player3.died:
+		win_game()
+		return
+
 	
 func _drop_bomb(x, y, bomb_range, your_bomb, id):
 	set_bomb_value(x, y, bomb_range)
@@ -391,21 +400,17 @@ func invalid_position(x, y):
 
 
 func _lose_game():
-	Global.clear_temp_chat()
 	dialog._set_caption("You lose!")
 	dialog._set_info("You lose!")
 	dialog._show_dialog()
 	outGame.start()
-	Networking.left_room()
 
 
 func win_game():
-	Global.clear_temp_chat()
 	dialog._set_caption("You win!")
 	dialog._set_info("You win!")
 	dialog._show_dialog()
 	outGame.start()
-	Networking.left_room()
 
 
 func _on_OutGame_timeout():

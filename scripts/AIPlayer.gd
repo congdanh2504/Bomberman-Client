@@ -16,9 +16,11 @@ var speed = 80
 var x_moves = [0, 0, -1, 1]
 var y_moves = [-1, 1, 0, 0]
 signal drop_bomb(x, y, bomb_range, bomb_type, id)
+signal die
 var died = false
 
 func die():
+	emit_signal("die")
 	Map.players_x[id] = -1
 	Map.players_y[id] = -1
 	died = true

@@ -59,10 +59,6 @@ margin_top = 96.0
 margin_right = 440.0
 margin_bottom = 224.0
 
-[node name="OutGame" type="Timer" parent="."]
-wait_time = 2.0
-one_shot = true
-
 [node name="Panel" type="Panel" parent="."]
 modulate = Color( 1, 1, 1, 0.741176 )
 margin_top = 304.0
@@ -138,5 +134,8 @@ one_shot = true
 
 [node name="Timer4" type="Timer" parent="."]
 
-[connection signal="timeout" from="OutGame" to="." method="_on_OutGame_timeout"]
+[node name="OutGame" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="timeout" from="OutGame" to="." method="_on_OutGame_timeout"]
