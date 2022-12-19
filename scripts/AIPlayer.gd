@@ -148,27 +148,26 @@ func find_and_drop_bomb(x, y):
 
 
 func is_drop_bomb():
-	var x = int(position.x/BLOCK_SIZE)
-	var y = int(position.y/BLOCK_SIZE)
-	if Map.bomb_map[x][y] > 0:
-		if actions.size() > 0:
-			var front = actions[0]	
-			if front["direction"] != "drop_bomb":
-				actions.clear()
-				var x2 = position.x
-				var y2 = position.y
-				if front["direction"] == "Up":
-					y2 -= front["step"]
-				elif front["direction"] == "Down":
-					y2 += front["step"]
-				elif front["direction"] == "Left":
-					x2 -= front["step"]
-				elif front["direction"] == "Right":
-					x2 += front["step"]
-				find_safe_position(int(x2/BLOCK_SIZE), int(y2/BLOCK_SIZE))
-				actions.push_front(front)
-		else:
-			find_safe_position(int(position.x/BLOCK_SIZE), int(position.y/BLOCK_SIZE))	
+	if is_safe():
+		return
+	if actions.size() > 0:
+		var front = actions[0]	
+		if front["direction"] != "drop_bomb":
+			actions.clear()
+			var x2 = position.x
+			var y2 = position.y
+			if front["direction"] == "Up":
+				y2 -= front["step"]
+			elif front["direction"] == "Down":
+				y2 += front["step"]
+			elif front["direction"] == "Left":
+				x2 -= front["step"]
+			elif front["direction"] == "Right":
+				x2 += front["step"]
+			find_safe_position(int(x2/BLOCK_SIZE), int(y2/BLOCK_SIZE))
+			actions.push_front(front)
+	else:
+		find_safe_position(int(position.x/BLOCK_SIZE), int(position.y/BLOCK_SIZE))
 
 
 func find_safe_position(x, y):
@@ -273,7 +272,7 @@ func _ready():
 func is_safe():
 	var x = int(position.x/BLOCK_SIZE)
 	var y = int(position.y/BLOCK_SIZE)
-	return Map.bomb_map[x][y] > 0
+	return Map.bomb_map[x][y] == 0
 
 
 func _process(delta):

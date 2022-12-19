@@ -144,13 +144,14 @@ func generate_stones():
 
 
 func _ready():
-	Map.bomb_map.clear()
 	timer.connect("timeout",self,"_emit_timer_end_signal")
 	timer2.connect("timeout",self,"_emit_timer_end_signal2")
 	timer3.connect("timeout",self,"_emit_timer_end_signal3")
 	timer4.connect("timeout",self,"_emit_timer_end_signal4")
 	rng.randomize()
 	Map.reset()
+	AiStats.reset()
+	Stats.reset()
 	generate_stones()
 	ai_player.id = 1
 	ai_player2.id = 2
@@ -189,10 +190,7 @@ func _on_die():
 
 	
 func _drop_bomb(x, y, bomb_range, your_bomb, id):
-	set_bomb_value(x, y, bomb_range)
-	ai_player.is_drop_bomb()
-	ai_player2.is_drop_bomb()
-	ai_player3.is_drop_bomb()
+	
 	if your_bomb:
 		Stats.decrease_bomb_num()
 	else:
@@ -216,6 +214,10 @@ func _drop_bomb(x, y, bomb_range, your_bomb, id):
 		x -= BLOCK_SIZE
 	if y > height - 6:
 		y -= BLOCK_SIZE
+	set_bomb_value(x, y, bomb_range)
+	ai_player.is_drop_bomb()
+	ai_player2.is_drop_bomb()
+	ai_player3.is_drop_bomb()
 	bomb.position = Vector2(x, y)
 	bomb.bomb_range = bomb_range
 	bomb.your_bomb = your_bomb

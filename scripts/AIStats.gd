@@ -7,9 +7,9 @@ var speed = [-1 ,80, 80, 80]
 
 
 func reset():
-	bomb_range = [2, 2, 2]
-	bomb_num = [2, 2, 2]
-	speed = [80, 80, 80]
+	bomb_range = [-1, 2, 2, 2]
+	bomb_num = [-1 ,1, 1, 1]
+	speed = [-1 ,80, 80, 80]
 
 func get_bomb_range(id):
 	return bomb_range[id]
